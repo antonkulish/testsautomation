@@ -23,9 +23,9 @@ public class FirstTest {
     }
 
     @AfterClass
-    public static void tesrDown(){
+    public static void tearsDown(){
         webDriver.quit();
-        webDriver = null; //why?
+        webDriver = null;
     }
 
     @Ignore
