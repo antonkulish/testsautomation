@@ -48,7 +48,7 @@ public class CustomConditionsTests{
     public void checkTitleAndUrlContainsText(){
         HomePage homePage = new HomePage(webDriver);
         SearchResultsPage searchResultsPage = homePage.enterSearchCriteria(textForSearch);
-        assertThat(searchResultsPage.pageIsLoaded("Search - My Store", "http://automationpractice.com/index.php?controller=search&orderby=position&orderway=desc&search_query=dresses&submit_search="));
+        assertThat(searchResultsPage.pageIsLoaded("Search", "submit_search"));
     }
 
     @Test
