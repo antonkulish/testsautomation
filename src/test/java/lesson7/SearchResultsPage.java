@@ -2,11 +2,11 @@ package lesson7;
 
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -37,14 +37,27 @@ public class SearchResultsPage {
     }
 
     public ExpectedCondition<Boolean> pageIsLoaded(String titleName, String url){
-        return(ExpectedConditions.and(
-                ExpectedConditions.titleContains(titleName),
-                ExpectedConditions.urlContains(url)
-        ));
+        return new ExpectedCondition<Boolean>() {
+            @Nullable
+            @Override
+            public Boolean apply(@Nullable WebDriver webDriver) {
+                return (webDriver.getTitle().contains(titleName)&&webDriver.getCurrentUrl().contains(url));
+            }
+        };
     }
 
     public ExpectedCondition<Boolean> stalenessOfElement(By locator){
-        return ExpectedConditions.invisibilityOfElementLocated(locator);
+        return new ExpectedCondition<Boolean>() {
+            @Nullable
+            @Override
+            public Boolean apply(@Nullable WebDriver webDriver) {
+                try {
+                    return (webDriver.findElements(locator).size() == 0);
+                } catch (StaleElementReferenceException e) {
+                    return true;
+                }
+            }
+        };
     }
 
 }
