@@ -6,6 +6,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -15,8 +16,10 @@ import java.util.concurrent.TimeUnit;
 public class CustomConditionsTests{
     protected static WebDriver webDriver;
 
+    WebElement SEARCH_INPUT = webDriver.findElement(By.id("search_query_top"));
+    WebElement SEARCH_BTN = webDriver.findElement(By.xpath("//button[@class='btn btn-default button-search']"));
+
     public By PRODUCT_NAME = By.xpath("//div[@class='block_content']//a[@class='product-name']");
-    public By RANDOM_ELEM_FROM_HOME_PAGE = By.id("homepage-slider");
     public String textForSearch = "dresses";
 
     @BeforeClass
@@ -39,22 +42,28 @@ public class CustomConditionsTests{
 
     @Test
     public void checkElementByNumHasText(){
-        HomePage homePage = new HomePage(webDriver);
-        SearchResultsPage searchResultsPage = homePage.enterSearchCriteria(textForSearch);
-        assertThat(searchResultsPage.listNthElementHasText(2, PRODUCT_NAME, "Blouse"));
+        SEARCH_INPUT.clear();
+        SEARCH_INPUT.sendKeys(textForSearch);
+        SEARCH_BTN.click();
+        CustomConditions customConditions = new CustomConditions(webDriver);
+        assertThat(customConditions.listNthElementHasText(2, PRODUCT_NAME, "Blouse"));
     }
 
     @Test
     public void checkTitleAndUrlContainsText(){
-        HomePage homePage = new HomePage(webDriver);
-        SearchResultsPage searchResultsPage = homePage.enterSearchCriteria(textForSearch);
-        assertThat(searchResultsPage.pageIsLoaded("Search", "submit_search"));
+        SEARCH_INPUT.clear();
+        SEARCH_INPUT.sendKeys(textForSearch);
+        SEARCH_BTN.click();
+        CustomConditions customConditions = new CustomConditions(webDriver);
+        assertThat(customConditions.pageIsLoaded("Search", "submit_search"));
     }
 
     @Test
     public void checkElemIsNotDisplay(){
-        HomePage homePage = new HomePage(webDriver);
-        SearchResultsPage searchResultsPage = homePage.enterSearchCriteria(textForSearch);
-        assertThat(searchResultsPage.stalenessOfElement(RANDOM_ELEM_FROM_HOME_PAGE));
+        SEARCH_INPUT.clear();
+        SEARCH_INPUT.sendKeys(textForSearch);
+        SEARCH_BTN.click();
+        CustomConditions customConditions = new CustomConditions(webDriver);
+        assertThat(customConditions.stalenessOfElement(SEARCH_INPUT));
     }
 }

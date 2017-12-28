@@ -5,19 +5,20 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class SearchResultsPage {
+public class CustomConditions {
+
     static WebDriver webDriver;
+    static WebDriverWait wait;
 
-
-    SearchResultsPage(WebDriver webDriver){
+    CustomConditions(WebDriver webDriver){
         this.webDriver = webDriver;
-        PageFactory.initElements(webDriver, this);
+        wait = new WebDriverWait(webDriver, 5);
     }
 
     public ExpectedCondition<Boolean> listNthElementHasText(int elemNum, By locator, String searchText){
@@ -46,18 +47,17 @@ public class SearchResultsPage {
         };
     }
 
-    public ExpectedCondition<Boolean> stalenessOfElement(By locator){
+    public ExpectedCondition<Boolean> stalenessOfElement(WebElement element){
         return new ExpectedCondition<Boolean>() {
             @Nullable
             @Override
             public Boolean apply(@Nullable WebDriver webDriver) {
                 try {
-                    return (webDriver.findElements(locator).size() == 0);
+                    return (element.isDisplayed() == false);
                 } catch (StaleElementReferenceException e) {
                     return true;
                 }
             }
         };
     }
-
 }
